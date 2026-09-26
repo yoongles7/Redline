@@ -1,0 +1,24 @@
+{
+  "agent_name": "medicare-research-agent",
+  "intended_purpose": "Conduct research on public medical spending statistics.",
+  "tools": [
+    {
+      "name": "read_file",
+      "description": "Read files from the portal.",
+      "parameters": ["path"],
+      "permissions": ["read"]
+    },
+    {
+      "name": "write_file",
+      "description": "Write files to the portal.",
+      "parameters": ["path", "content"],
+      "permissions": ["write"]
+    },
+    {
+      "name": "http_request",
+      "description": "Make HTTP requests to external servers.",
+      "parameters": ["url", "method"],
+      "permissions": ["network"]
+    }
+  ]
+}
