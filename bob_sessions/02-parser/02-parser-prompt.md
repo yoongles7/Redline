@@ -5,6 +5,7 @@
 **Bobcoins used:** 0.225
 
 **Prompt:**
+
 Read @SPEC.md and @samples/high_risk_medicare.json.
 
 Build analyzer/core/parser.py.

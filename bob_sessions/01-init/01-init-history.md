@@ -1,4 +1,5 @@
-# /init
+### Prompt
+/init
 
 ---
 
