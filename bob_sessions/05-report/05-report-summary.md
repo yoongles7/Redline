@@ -2,7 +2,7 @@
 
 **Task:** Build `analyzer/core/report.py` — produces the structured report.
 
-**Bobcoins used:** (check screenshot)
+**Bobcoins used:** 0.286
 
 **Prompt:** 
 
