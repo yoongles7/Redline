@@ -7,26 +7,67 @@
 <div class="max-w-3xl mx-auto py-24 px-6">
 
   <h1 class="text-4xl font-bold text-orange-500 mb-3">Analyze an agent</h1>
-  <p class="text-zinc-500 mb-10">Point Redline at a LangChain repository on disk.</p>
+  <p class="text-zinc-500 mb-10">Upload a LangChain repository as a <code class="text-zinc-400">.zip</code> archive.</p>
 
   {% if error %}
   <div class="bg-red-950 border border-red-500/40 text-red-300 px-4 py-3 rounded mb-6">{{ error }}</div>
   {% endif %}
 
-  <form method="post">
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <label class="block text-sm text-zinc-400 mb-2">Repository path</label>
-    <input
-      type="text"
-      name="repo_path"
-      placeholder="/path/to/your/langchain/repo"
-      class="w-full bg-zinc-950 border border-zinc-800 focus:border-orange-500 rounded px-4 py-3 font-mono text-sm text-zinc-200 outline-none transition"
-    >
+
+    <div id="drop-zone">
+      <label
+        for="repo_zip"
+        class="flex flex-col items-center justify-center w-full border-2 border-dashed border-zinc-700 hover:border-orange-500 rounded-lg py-16 px-6 cursor-pointer transition text-center"
+      >
+        <svg class="w-10 h-10 text-zinc-600 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+        </svg>
+        <span class="text-zinc-300 text-sm font-medium">Drop your <span class="text-orange-400 font-semibold">.zip</span> here or click to browse</span>
+        <span class="text-zinc-600 text-xs mt-1">Max 50 MB &middot; Must contain Python files</span>
+        <input type="file" name="repo_zip" id="repo_zip" accept=".zip" required class="sr-only">
+      </label>
+    </div>
+
+    <div id="file-preview" class="hidden border border-orange-500/40 bg-zinc-950 rounded-lg py-10 px-6 flex flex-col items-center justify-center text-center">
+      <span id="preview-name" class="text-zinc-200 font-mono text-sm"></span>
+      <span id="preview-size" class="text-zinc-500 text-sm mt-1"></span>
+      <button type="button" id="change-file-btn" class="text-orange-500 hover:text-orange-400 text-sm mt-2 bg-transparent border-none cursor-pointer p-0">Change file</button>
+    </div>
+
     <div class="mt-6 flex justify-center">
       <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-black font-semibold px-6 py-3 rounded transition">Run analysis</button>
     </div>
   </form>
 
 </div>
+
+<script>
+  var input = document.getElementById('repo_zip');
+  var dropZone = document.getElementById('drop-zone');
+  var filePreview = document.getElementById('file-preview');
+  var previewName = document.getElementById('preview-name');
+  var previewSize = document.getElementById('preview-size');
+
+  input.addEventListener('change', function () {
+    var file = this.files[0];
+    if (!file) return;
+    var bytes = file.size;
+    var size = bytes >= 1048576
+      ? (bytes / 1048576).toFixed(1) + ' MB'
+      : (bytes / 1024).toFixed(1) + ' KB';
+    previewName.textContent = file.name + ' · ' + size;
+    previewSize.textContent = '';
+    dropZone.classList.add('hidden');
+    filePreview.classList.remove('hidden');
+  });
+
+  document.getElementById('change-file-btn').addEventListener('click', function () {
+    input.value = '';
+    filePreview.classList.add('hidden');
+    dropZone.classList.remove('hidden');
+  });
+</script>
 
 {% endblock %}

@@ -4,6 +4,7 @@ scanner.py — discovers @tool-decorated functions in a LangChain repository.
 
 import ast
 import os
+import re
 
 _SKIP_DIRS = {
     "venv", ".venv", "__pycache__", ".git",
@@ -23,6 +24,22 @@ def _is_tool_decorator(node):
     return False
 
 
+# Common VCS branch names that appear as trailing suffixes in downloaded archives.
+# e.g. "react-agent-main" → "react-agent", "my-repo-master" → "my-repo".
+_BRANCH_SUFFIXES = re.compile(
+    r"-(?:main|master|develop|dev|trunk|release|staging|latest|HEAD)$",
+    re.IGNORECASE,
+)
+
+
+def _strip_branch_suffix(name: str) -> str:
+    """
+    Remove a trailing known-branch suffix (-main, -master, -dev, …) from a
+    repo basename.  Only one suffix segment is stripped.
+    """
+    return _BRANCH_SUFFIXES.sub("", name)
+
+
 def _infer_agent_name(repo_path):
     """
     Return the agent name.
@@ -30,9 +47,10 @@ def _infer_agent_name(repo_path):
     Priority:
     1. If agent.py exists at the repo root and contains a module-level
        assignment to 'agent' or 'agent_executor', return that variable name.
-    2. Otherwise, return the basename of repo_path.
+    2. Otherwise, return the basename of repo_path with any trailing
+       branch suffix (-main, -master, -<word>) stripped.
     """
-    basename = os.path.basename(os.path.normpath(repo_path))
+    basename = _strip_branch_suffix(os.path.basename(os.path.normpath(repo_path)))
     agent_py = os.path.join(repo_path, "agent.py")
 
     if not os.path.isfile(agent_py):
