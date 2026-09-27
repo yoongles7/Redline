@@ -243,16 +243,37 @@ def generate_mitigations(model: dict, impact_paths: list, repo_path: str) -> lis
         "after": _run_pipeline(modified_model, repo_path),
     })
 
-    # --- restrict_scope -------------------------------------------------------
-    modified_model, restrict_reason = _apply_restrict_scope(model, primary_tool)
-    candidates.append({
-        "action": "restrict_scope",
-        "tool": primary_tool,
-        "reason": restrict_reason,
-        "expected_impact": "Reduces the tool's reachable assets but preserves the tool.",
-        "before": before,
-        "after": _run_pipeline(modified_model, repo_path),
-    })
+    # --- restrict_scope / scope_limit ----------------------------------------
+    # Find the primary tool's current operation.
+    primary_tool_entry = next(
+        (t for t in model.get("tools", []) if t["name"] == primary_tool), {}
+    )
+    primary_op = primary_tool_entry.get("operation", "read")
+
+    if primary_op == "read":
+        # Downgrading read→read is a no-op; emit a scope_limit candidate instead.
+        candidates.append({
+            "action": "scope_limit",
+            "tool": primary_tool,
+            "reason": (
+                f"Restrict {primary_tool} to a fixed allowlist of keys or resources."
+            ),
+            "expected_impact": (
+                "Narrows the tool's inputs but does not change its operation."
+            ),
+            "before": before,
+            "after": before,
+        })
+    else:
+        modified_model, restrict_reason = _apply_restrict_scope(model, primary_tool)
+        candidates.append({
+            "action": "restrict_scope",
+            "tool": primary_tool,
+            "reason": restrict_reason,
+            "expected_impact": "Reduces the tool's reachable assets but preserves the tool.",
+            "before": before,
+            "after": _run_pipeline(modified_model, repo_path),
+        })
 
     # --- human_approval -------------------------------------------------------
     modified_model = _apply_human_approval(model, primary_tool)

@@ -144,11 +144,11 @@
   <!-- Capability graph -->
   <div class="mt-12">
     <h2 class="text-2xl font-bold text-orange-500 mb-6">Capability graph</h2>
-    <div id="graph" data-dot="{{ report.graph_dot }}" class="bg-zinc-950 border border-zinc-800 rounded-lg p-4 overflow-auto max-h-[600px]"></div>
+    <div id="graph" data-dot="{{ report.graph_dot }}" class="bg-zinc-950 border border-zinc-800 rounded-lg p-4 overflow-x-auto"></div>
   </div>
 
   <style>
-    #graph svg { width: 100% !important; height: auto !important; max-height: 600px; display: block; }
+    #graph svg { width: 100%; height: auto; display: block; }
     #graph svg text { fill: #e4e4e7 !important; font-family: inherit; font-size: 10px !important; }
     #graph svg .node { font-size: 10px !important; }
     #graph svg .node polygon, #graph svg .node ellipse, #graph svg .node path { stroke: #f97316 !important; }
@@ -166,7 +166,7 @@
       .then(svg => {
         svg.setAttribute("width", "100%");
         svg.setAttribute("height", "auto");
-        svg.style.maxHeight = "600px";
+        svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
         svg.style.display = "block";
         container.innerHTML = "";
         container.appendChild(svg);

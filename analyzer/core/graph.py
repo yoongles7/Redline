@@ -127,7 +127,7 @@ def graph_to_dot(graph: dict) -> str:
     lines = [
         "digraph capability_graph {",
         '    rankdir=LR;',
-        '    graph [fontsize=10, bgcolor="transparent"];',
+        '    graph [fontsize=10, bgcolor="transparent", pad="0.5", nodesep="0.4", ranksep="0.6"];',
         '    node [fontsize=10, fontcolor="#e4e4e7"];',
         '    edge [fontsize=9, fontcolor="#a1a1aa"];',
         "",

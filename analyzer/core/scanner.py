@@ -49,19 +49,23 @@ def _infer_agent_name(repo_path):
        assignment to 'agent' or 'agent_executor', return that variable name.
     2. Otherwise, return the basename of repo_path with any trailing
        branch suffix (-main, -master, -<word>) stripped.
+
+    The branch-suffix strip is applied as the final step on whichever name
+    is chosen, so a zip extracted as ``my-repo-main/`` always yields
+    ``my-repo`` regardless of which priority branch is taken.
     """
-    basename = _strip_branch_suffix(os.path.basename(os.path.normpath(repo_path)))
+    raw_basename = os.path.basename(os.path.normpath(repo_path))
     agent_py = os.path.join(repo_path, "agent.py")
 
     if not os.path.isfile(agent_py):
-        return basename
+        return _strip_branch_suffix(raw_basename)
 
     try:
         with open(agent_py, "r", encoding="utf-8", errors="replace") as fh:
             source = fh.read()
         tree = ast.parse(source, filename=agent_py)
     except SyntaxError:
-        return basename
+        return _strip_branch_suffix(raw_basename)
 
     for node in ast.iter_child_nodes(tree):
         if isinstance(node, ast.Assign):
@@ -69,9 +73,9 @@ def _infer_agent_name(repo_path):
                 if isinstance(target, ast.Name) and target.id in (
                     "agent", "agent_executor"
                 ):
-                    return target.id
+                    return _strip_branch_suffix(target.id)
 
-    return basename
+    return _strip_branch_suffix(raw_basename)
 
 
 def scan_repository(repo_path: str) -> dict:

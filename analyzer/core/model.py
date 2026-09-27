@@ -9,6 +9,8 @@ import ast
 import os
 import re
 
+from analyzer.core.scanner import _strip_branch_suffix
+
 
 # ---------------------------------------------------------------------------
 # Sensitivity table
@@ -55,8 +57,14 @@ def _read_readme_purpose(repo_path: str) -> str:
                 return ""
             for line in text.splitlines():
                 stripped = line.strip()
-                # Skip blank lines and headings
-                if stripped and not stripped.startswith("#"):
+                # Skip blank lines, headings, HTML tags, and markdown badges
+                if (
+                    stripped
+                    and not stripped.startswith("#")
+                    and not stripped.startswith("<")
+                    and not stripped.startswith("[![")
+                    and not stripped.startswith("![")
+                ):
                     return stripped
             return ""
     return ""
@@ -229,7 +237,7 @@ def build_model(enriched_scan: dict, repo_path: str) -> dict:
     # --- Agent ---------------------------------------------------------------
     agent_name = enriched_scan.get("agent_name", "")
     if not agent_name or agent_name == "agent":
-        agent_name = os.path.basename(os.path.normpath(repo_path))
+        agent_name = _strip_branch_suffix(os.path.basename(os.path.normpath(repo_path)))
 
     purpose = (
         _read_readme_purpose(repo_path)

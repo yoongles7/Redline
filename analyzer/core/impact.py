@@ -172,7 +172,7 @@ def detect_impact_paths(model: dict, graph: dict, reachability: dict) -> list[di
         if not (flag_high_sensitivity or flag_high_impact_op or flag_cross_boundary):
             continue
 
-        chain = [agent_label, tool_label, asset_label]
+        chain = ["agent", tool_label, asset_label]
 
         sev = _severity(sensitivity)
         cat = _category(operation, asset_type)
