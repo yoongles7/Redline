@@ -12,7 +12,11 @@ DEBUG = False
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
-DATABASES = {"default": dj_database_url.config(env="DATABASE_URL", conn_max_age=600)}
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL environment variable is required in production")
+
+DATABASES = {"default": dj_database_url.config(default=DATABASE_URL, conn_max_age=600)}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
