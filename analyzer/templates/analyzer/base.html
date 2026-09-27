@@ -1,35 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Redline{% endblock %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    * { font-family: 'JetBrains Mono', 'Courier New', monospace; }
-  </style>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 </head>
-<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col">
+<body class="bg-black text-zinc-300 min-h-screen flex flex-col">
 
-  <nav class="border-b border-zinc-800 px-6 py-4">
-    <div class="max-w-4xl mx-auto">
-      <a href="/" class="text-orange-500 font-semibold tracking-tight hover:text-orange-400 transition-colors">
-        Redline
-      </a>
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-black border-b border-orange-500/40 px-8 py-4">
+    <div class="flex justify-between items-center max-w-7xl mx-auto">
+      <a href="/" class="text-2xl font-bold text-orange-500">Redline</a>
+      <a href="/" class="text-zinc-400 hover:text-orange-500 transition">Home</a>
+      <a href="/analyze/" class="text-zinc-400 hover:text-orange-500 transition">Analyze</a>
     </div>
   </nav>
 
-  <main class="flex-1">
+  <main class="flex-1 pt-16">
     {% block content %}{% endblock %}
   </main>
 
-  <footer class="border-t border-zinc-800 px-6 py-4 mt-auto">
-    <div class="max-w-4xl mx-auto text-zinc-600 text-xs text-center">
-      Redline covers tool permission blast radius only — not runtime behaviour, memory poisoning, or multi-agent risks.
-    </div>
+  <footer class="mt-auto border-t border-orange-500/20 py-8 px-8 text-center text-sm text-zinc-500">
+    <p>Built by <span class="text-orange-500 font-semibold">HowitzerScript</span></p>
+    <p class="mt-1">
+      <a href="https://github.com/yoongles7/Redline" class="text-zinc-400 hover:text-orange-500 transition">github.com/yoongles7/Redline</a>
+    </p>
   </footer>
 
 </body>

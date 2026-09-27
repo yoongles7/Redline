@@ -3,65 +3,37 @@
 {% block title %}Analyze — Redline{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-6 py-16">
 
-  <h1 class="text-2xl font-semibold text-zinc-100 mb-2 tracking-tight">
-    Analyze an agent's blast radius
-  </h1>
-  <p class="text-zinc-500 text-sm mb-8">
-    Paste your agent config as JSON. Redline will classify its tools, detect attack paths, and score
-    the overall blast radius.
-  </p>
+<div class="max-w-3xl mx-auto py-24 px-6">
 
-  <!-- Error alert -->
+  <h1 class="text-4xl font-bold text-orange-500 mb-3">Analyze an agent</h1>
+  <p class="text-zinc-500 mb-10">Point Redline at a LangChain repository on disk.</p>
+
   {% if error %}
-  <div class="border border-red-700 bg-red-950 text-red-300 text-sm px-4 py-3 mb-6">
-    <span class="font-semibold text-red-400">Error: </span>{{ error }}
-  </div>
+  <div class="bg-red-950 border border-red-500/40 text-red-300 px-4 py-3 rounded mb-6">{{ error }}</div>
   {% endif %}
 
-  <!-- Analysis form -->
-  <form method="post" class="flex flex-col gap-4">
+  <form method="post">
     {% csrf_token %}
-
-    <textarea
-      name="config_text"
-      rows="20"
-      spellcheck="false"
-      class="w-full bg-zinc-900 border border-zinc-700 text-zinc-100 text-sm px-4 py-3 resize-y focus:outline-none focus:border-orange-500 placeholder-zinc-600"
-      style="font-family: 'JetBrains Mono', 'Courier New', monospace;"
-      placeholder='{
-  "agent_name": "My Coding Agent",
-  "intended_purpose": "Help developers write and review code.",
-  "tools": [
-    {
-      "name": "read_file",
-      "description": "Read a file from the local filesystem.",
-      "parameters": ["path"],
-      "permissions": ["read"]
-    },
-    {
-      "name": "run_shell",
-      "description": "Execute an arbitrary shell command.",
-      "parameters": ["command"],
-      "permissions": ["execute", "write", "network"]
-    }
-  ]
-}'
-    ></textarea>
-
-    <div class="flex items-center justify-between">
-      <button
-        type="submit"
-        class="bg-orange-500 hover:bg-orange-400 text-zinc-950 font-semibold text-sm px-6 py-2.5 transition-colors"
-      >
-        Run analysis
-      </button>
-      <a href="/" class="text-zinc-500 hover:text-zinc-300 text-xs transition-colors">
-        ← Back to home
-      </a>
-    </div>
-
+    <label class="block text-sm text-zinc-400 mb-2">Repository path</label>
+    <input
+      type="text"
+      name="repo_path"
+      placeholder="/path/to/your/langchain/repo"
+      class="w-full bg-zinc-950 border border-zinc-800 focus:border-orange-500 rounded px-4 py-3 font-mono text-sm text-zinc-200 outline-none transition"
+    >
+    <button type="submit" class="mt-6 bg-orange-500 hover:bg-orange-600 text-black font-semibold px-6 py-3 rounded transition">Run analysis</button>
   </form>
+
+  <div class="mt-12">
+    <p class="text-sm text-zinc-500 mb-3">Examples — copy a path and paste it above:</p>
+    <div class="flex flex-col gap-2">
+      <code class="font-mono text-sm text-zinc-300 bg-zinc-950 border border-zinc-800 rounded px-3 py-2">samples/secure_agent</code>
+      <code class="font-mono text-sm text-zinc-300 bg-zinc-950 border border-zinc-800 rounded px-3 py-2">samples/overprivileged_agent</code>
+      <code class="font-mono text-sm text-zinc-300 bg-zinc-950 border border-zinc-800 rounded px-3 py-2">samples/credential_agent</code>
+    </div>
+  </div>
+
 </div>
+
 {% endblock %}

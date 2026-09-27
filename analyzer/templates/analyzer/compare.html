@@ -1,0 +1,49 @@
+{% extends "analyzer/base.html" %}
+
+{% block title %}Mitigation comparison — {{ report.agent_name }} — Redline{% endblock %}
+
+{% block content %}
+
+<div class="max-w-6xl mx-auto py-24 px-6">
+
+  <h1 class="text-4xl font-bold text-orange-500 mb-3">Mitigation comparison</h1>
+  <p class="text-zinc-500 mb-10">Agent: {{ report.agent_name }} · Baseline score: {{ report.score }}</p>
+
+  {% for candidate in report.mitigation_candidates %}
+  <div class="bg-zinc-950 border border-orange-500/30 rounded-lg p-6 mb-6">
+
+    <!-- Header row -->
+    <div class="flex flex-wrap items-baseline gap-3">
+      <span class="text-orange-500 font-bold uppercase tracking-wide">{{ candidate.action }}</span>
+      <span class="text-zinc-400">{{ candidate.tool }}</span>
+    </div>
+
+    <!-- Reason -->
+    <p class="text-sm text-zinc-400 mt-2">{{ candidate.reason }}</p>
+
+    <!-- Before / After -->
+    <div class="flex items-center gap-6 mt-6">
+      <div class="text-center">
+        <div class="text-4xl font-bold text-zinc-500">{{ candidate.before.score }}</div>
+        <div class="text-xs text-zinc-500 mt-1 uppercase tracking-wide">before</div>
+      </div>
+      <div class="text-orange-500 text-3xl">→</div>
+      <div class="text-center">
+        <div class="text-4xl font-bold text-orange-500">{{ candidate.after.score }}</div>
+        <div class="text-xs text-zinc-500 mt-1 uppercase tracking-wide">after</div>
+      </div>
+    </div>
+
+    <!-- Expected impact -->
+    <p class="text-sm text-zinc-500 mt-4 italic">{{ candidate.expected_impact }}</p>
+
+  </div>
+  {% empty %}
+  <p class="text-zinc-500 text-sm">No mitigation candidates available.</p>
+  {% endfor %}
+
+  <a href="/report/{{ report.id }}/" class="text-zinc-400 hover:text-orange-500 transition">← Back to report</a>
+
+</div>
+
+{% endblock %}
