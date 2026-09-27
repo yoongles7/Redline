@@ -124,7 +124,14 @@ def graph_to_dot(graph: dict) -> str:
             prev = asset_sensitivity.get(to_id, 0)
             asset_sensitivity[to_id] = max(prev, s)
 
-    lines = ["digraph capability_graph {", '    rankdir=LR;', ""]
+    lines = [
+        "digraph capability_graph {",
+        '    rankdir=LR;',
+        '    graph [fontsize=10, bgcolor="transparent"];',
+        '    node [fontsize=10, fontcolor="#e4e4e7"];',
+        '    edge [fontsize=9, fontcolor="#a1a1aa"];',
+        "",
+    ]
 
     # ---- Nodes --------------------------------------------------------------
     for node in nodes:
@@ -132,34 +139,46 @@ def graph_to_dot(graph: dict) -> str:
         label = node["label"]
         kind = node["kind"]
 
-        safe_id = _dot_id(nid)
+        quoted_id = '"' + _dot_id(nid) + '"'
         escaped_label = label.replace('"', '\\"')
 
         if kind == "agent":
-            attrs = 'shape=ellipse, style=filled, fillcolor=deepskyblue, fontcolor=white'
+            attrs = (
+                'shape=doubleoctagon, style=filled, '
+                'fillcolor="#0a0a0a", color="#f97316", fontcolor="#e4e4e7"'
+            )
         elif kind == "tool":
-            attrs = 'shape=box, style=filled, fillcolor=orange'
+            attrs = (
+                'shape=box, style=filled, '
+                'fillcolor="#0a0a0a", color="#f97316", fontcolor="#e4e4e7"'
+            )
         else:
-            # asset — red if sensitivity >= 4, otherwise grey
+            # asset — red border if sensitivity >= 4, otherwise orange
             s = asset_sensitivity.get(nid, 0)
-            color = "red" if s >= 4 else "lightgrey"
-            attrs = f'shape=cylinder, style=filled, fillcolor={color}'
+            border = "#ef4444" if s >= 4 else "#f97316"
+            attrs = (
+                f'shape=cylinder, style=filled, '
+                f'fillcolor="#0a0a0a", color="{border}", fontcolor="#e4e4e7"'
+            )
 
-        lines.append(f'    {safe_id} [label="{escaped_label}", {attrs}];')
+        lines.append(f'    {quoted_id} [label="{escaped_label}", {attrs}];')
 
     lines.append("")
 
     # ---- Edges --------------------------------------------------------------
     for edge in edges:
-        src = _dot_id(edge["from"])
-        dst = _dot_id(edge["to"])
+        src = '"' + _dot_id(edge["from"]) + '"'
+        dst = '"' + _dot_id(edge["to"]) + '"'
         op = edge.get("operation")
 
         if op is not None:
             edge_label = op.upper()
-            lines.append(f'    {src} -> {dst} [label="{edge_label}"];')
+            lines.append(
+                f'    {src} -> {dst} [label="{edge_label}", '
+                f'color="#f97316", fontcolor="#a1a1aa"];'
+            )
         else:
-            lines.append(f'    {src} -> {dst};')
+            lines.append(f'    {src} -> {dst} [color="#f97316"];')
 
     lines.append("}")
     return "\n".join(lines)

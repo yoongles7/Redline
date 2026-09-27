@@ -144,21 +144,32 @@
   <!-- Capability graph -->
   <div class="mt-12">
     <h2 class="text-2xl font-bold text-orange-500 mb-6">Capability graph</h2>
-    <div id="graph" class="bg-zinc-950 border border-zinc-800 rounded-lg p-4 overflow-auto"></div>
+    <div id="graph" data-dot="{{ report.graph_dot }}" class="bg-zinc-950 border border-zinc-800 rounded-lg p-4 overflow-auto"></div>
   </div>
+
+  <style>
+    #graph svg { width: 100%; height: auto; }
+    #graph svg text { fill: #e4e4e7 !important; font-family: inherit; }
+    #graph svg .node polygon, #graph svg .node ellipse, #graph svg .node path { stroke: #f97316 !important; }
+    #graph svg .edge path { stroke: #f97316 !important; }
+    #graph svg .edge polygon { fill: #f97316 !important; stroke: #f97316 !important; }
+  </style>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
   <script>
-    const dot = "{{ report.graph_dot|escapejs }}";
+    const container = document.getElementById("graph");
+    const dot = container.dataset.dot;
     const viz = new Viz();
     viz.renderSVGElement(dot)
-      .then(element => { document.getElementById("graph").appendChild(element); })
-      .catch(err => { document.getElementById("graph").textContent = "Graph render failed."; });
+      .then(element => { container.innerHTML = ""; container.appendChild(element); })
+      .catch(err => { container.textContent = "Graph render failed: " + err; });
   </script>
 
   <!-- Compare link -->
-  <a href="/report/{{ report.id }}/compare/" class="inline-block mt-12 bg-orange-500 hover:bg-orange-600 text-black font-semibold px-6 py-3 rounded transition">Compare mitigations</a>
+  <div class="mt-12 flex justify-center">
+    <a href="/report/{{ report.id }}/compare/" class="bg-orange-500 hover:bg-orange-600 text-black font-semibold px-6 py-3 rounded transition">Compare mitigations</a>
+  </div>
 
 </div>
 

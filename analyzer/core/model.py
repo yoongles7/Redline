@@ -5,6 +5,7 @@ Takes the dict returned by inference.infer_capabilities() and produces the
 structured security model defined in SPEC.md.
 """
 
+import ast
 import os
 import re
 
@@ -59,6 +60,37 @@ def _read_readme_purpose(repo_path: str) -> str:
                     return stripped
             return ""
     return ""
+
+
+def _read_agent_docstring(repo_path: str) -> str:
+    """
+    Return the first sentence of the module docstring from agent.py, if present.
+    Returns "" if agent.py doesn't exist or has no module docstring.
+    """
+    agent_py = os.path.join(repo_path, "agent.py")
+    if not os.path.isfile(agent_py):
+        return ""
+    try:
+        with open(agent_py, "r", encoding="utf-8", errors="replace") as fh:
+            source = fh.read()
+        tree = ast.parse(source, filename=agent_py)
+    except SyntaxError:
+        return ""
+    docstring = ast.get_docstring(tree)
+    if not docstring:
+        return ""
+    # Return only the first sentence
+    first_sentence = re.split(r"(?<=[.!?])\s", docstring.strip())[0]
+    return first_sentence.strip()
+
+
+def _dirname_as_purpose(repo_path: str) -> str:
+    """
+    Convert the repository directory name to a human-readable purpose string.
+    e.g. 'overprivileged_agent' → 'Overprivileged agent'
+    """
+    name = os.path.basename(os.path.normpath(repo_path))
+    return name.replace("_", " ").capitalize()
 
 
 def _load_py_source(path: str) -> str:
@@ -199,7 +231,11 @@ def build_model(enriched_scan: dict, repo_path: str) -> dict:
     if not agent_name or agent_name == "agent":
         agent_name = os.path.basename(os.path.normpath(repo_path))
 
-    purpose = _read_readme_purpose(repo_path)
+    purpose = (
+        _read_readme_purpose(repo_path)
+        or _read_agent_docstring(repo_path)
+        or _dirname_as_purpose(repo_path)
+    )
 
     # --- Tools ---------------------------------------------------------------
     tools = [
