@@ -4,7 +4,7 @@
 
 **Prompt:** `/init`
 
-**Bobcoins used:** 0.939
+**Bobcoins used:** 0.837
 
 **Output:**
 - `AGENTS.md` (root)

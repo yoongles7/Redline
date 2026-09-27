@@ -1,12 +1,9 @@
-# AGENTS.md
+# Project Coding Rules (Non-Obvious Only)
 
-This file provides guidance to agents when working with code in this repository.
-
-## Coding Rules
-
-- All four `analyzer/core/` modules (`parser.py`, `classifier.py`, `paths.py`, `report.py`) are empty stubs — implement them according to `SPEC.md`, which is the authoritative spec.
-- Detection rule table (permission combos → severity) is in `SPEC.md` — do not hardcode severity values without cross-checking it.
-- No `requirements.txt` exists. After installing new packages with pip, run `pip freeze > requirements.txt` or manually document the dependency.
-- `DJANGO_SETTINGS_MODULE` defaults to `redline_bob.settings.development` — do not override in code unless writing production-specific logic.
-- When adding URL patterns, edit `redline_bob/urls.py` (project-level) and wire app-level routes via `include()`.
-- Tests go in `analyzer/tests.py` (single file). Run a specific test: `python manage.py test analyzer.tests.ClassName.method_name`.
+- `analyzer/core/` modules (`parser`, `classifier`, `paths`, `report`) are **not yet implemented** — the directory exists but only has an empty `__init__.py`. These are the primary implementation targets.
+- `analyzer/views.py` imports them as: `from .core import parser, classifier, paths, report as report_module` — match these exact module names.
+- `analyzer/core/__init__.py` must stay empty; do not add re-exports there.
+- `Report` model stores `attack_paths` and `mitigations` as `JSONField(default=list)` — pass Python lists, not JSON strings.
+- `manage.py` hardcodes `DJANGO_SETTINGS_MODULE=redline_bob.settings.development`; do not change it — override via env var when needed.
+- No linter/formatter config exists; follow PEP 8 manually. Imports order: stdlib → third-party → local (relative `.` imports within app).
+- Samples in `samples/` are synthetic LangChain repos used as analyzer inputs, not as Django test fixtures.

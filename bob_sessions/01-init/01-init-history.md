@@ -1,9 +1,9 @@
-### Prompt
+### Prompt 
 /init
 
 ---
 
-**Status:** active  **Date:** 2026-09-26
+**Status:** active  **Date:** 2026-09-27
 
 ---
 
@@ -271,97 +271,13 @@ Remember: The goal is to create documentation that enables AI assistants to be i
 
 
 > 🔧 **update_todo_list** — 
-[-] Check for existing AGENTS.md files and other AI rules
+[-] Check for existing AGENTS.md files and other AI assistant rules
 [ ] Identify stack, language, framework, build tools
 [ ] Extract commands (build, test, lint, run)
-[ ] Map core architecture and key entry points
+[ ] Map core architecture and entry points
 [ ] Document critical patterns and code style
-[ ] Compile AGENTS.md files
+[ ] Compile AGENTS.md and mode-specific files
 
-
-### 🤖 Assistant
-
-> 🔧 called: glob, glob, glob
-
-
-
-> 🔧 **glob** — AGENTS.md
-
-> 🔧 **glob** — .bob/rules-*/AGENTS.md
-
-> 🔧 **glob** — {CLAUDE.md,.cursorrules,.roorules,.github/copilot-instructions.md}
-
-### 🤖 Assistant
-
-> 🔧 called: list_files, read_file
-
-
-
-> 🔧 **list_files** — .
-
-> 🔧 **read_file** — SPEC.md
-
-### 🤖 Assistant
-
-> 🔧 called: list_files, list_files, read_file
-
-
-
-> 🔧 **list_files** — analyzer
-
-> 🔧 **list_files** — redline_bob
-
-> 🔧 **read_file** — manage.py
-
-### 🤖 Assistant
-
-> 🔧 called: list_files, list_files, read_file
-
-
-
-> 🔧 **list_files** — analyzer/core
-
-> 🔧 **list_files** — redline_bob/settings
-
-> 🔧 **read_file** — analyzer/tests.py
-
-### 🤖 Assistant
-
-> 🔧 called: read_file, read_file, read_file, read_file
-
-
-
-> 🔧 **read_file** — analyzer/core/classifier.py
-
-> 🔧 **read_file** — analyzer/core/paths.py
-
-> 🔧 **read_file** — analyzer/core/parser.py
-
-> 🔧 **read_file** — analyzer/core/report.py
-
-### 🤖 Assistant
-
-> 🔧 called: read_file, read_file, read_file
-
-
-
-> 🔧 **read_file** — analyzer/models.py
-
-> 🔧 **read_file** — analyzer/views.py
-
-> 🔧 **read_file** — redline_bob/settings/base.py
-
-### 🤖 Assistant
-
-> 🔧 called: read_file, read_file, read_file
-
-
-
-> 🔧 **read_file** — redline_bob/settings/development.py
-
-> 🔧 **read_file** — redline_bob/settings/production.py
-
-> 🔧 **read_file** — redline_bob/urls.py
 
 ### 🤖 Assistant
 
@@ -369,90 +285,136 @@ Remember: The goal is to create documentation that enables AI assistants to be i
 
 
 
-> 🔧 **glob** — requirements*.txt
+> 🔧 **read_file** — AGENTS.md
 
-> 🔧 **glob** — *.cfg
+> 🔧 **glob** — .bob/rules-*/AGENTS.md
+
+> 🔧 **glob** — {CLAUDE.md,.cursorrules,.roorules,.github/copilot-instructions.md}
+
+### 🤖 Assistant
+
+> 🔧 called: list_files, glob
+
+
+
+> 🔧 **list_files** — .
+
+> 🔧 **glob** — .cursor/rules/**
+
+### 🤖 Assistant
+
+> 🔧 called: read_file, read_file, list_files, list_files
+
+
+
+> 🔧 **list_files** — redline_bob
+
+> 🔧 **list_files** — analyzer
+
+> 🔧 **read_file** — requirements.txt
+
+> 🔧 **read_file** — manage.py
+
+### 🤖 Assistant
+
+> 🔧 called: list_files, read_file, list_files
+
+
+
+> 🔧 **list_files** — redline_bob/settings
+
+> 🔧 **list_files** — analyzer/core
+
+> 🔧 **read_file** — analyzer/models.py
+
+### 🤖 Assistant
+
+> 🔧 called: read_file, read_file, read_file
+
+
+
+> 🔧 **read_file** — redline_bob/settings/base.py
+
+> 🔧 **read_file** — analyzer/views.py
+
+> 🔧 **read_file** — analyzer/urls.py
+
+### 🤖 Assistant
+
+> 🔧 called: read_file, read_file, read_file
+
+
+
+> 🔧 **read_file** — analyzer/tests.py
+
+> 🔧 **read_file** — redline_bob/settings/development.py
+
+> 🔧 **read_file** — analyzer/core/__init__.py
+
+### 🤖 Assistant
+
+> 🔧 called: read_file, read_file, read_file
+
+
+
+> 🔧 **read_file** — redline_bob/urls.py
+
+> 🔧 **read_file** — SPEC.md
 
 > 🔧 **read_file** — README.md
 
 ### 🤖 Assistant
 
-> 🔧 called: glob, glob, list_files
+> 🔧 called: list_files, read_file, read_file
 
 
-
-> 🔧 **glob** — *.toml
-
-> 🔧 **glob** — *.ini
-
-> 🔧 **list_files** — venv
-
-### 🤖 Assistant
-
-> 🔧 called: execute_command, list_files
-
-
-
-> 🔧 **execute_command** — cat venv/pyvenv.cfg && pip freeze 2>/dev/null || (source venv/bin/activate && pip freeze)
 
 > 🔧 **list_files** — samples
 
-### 🤖 Assistant
+> 🔧 **read_file** — redline_bob/settings/production.py
 
-> 🔧 called: execute_command
-
-
-
-> 🔧 **execute_command** — source venv/bin/activate 2>/dev/null; pip freeze 2>/dev/null; cat venv/lib/python*/site-packages/django/__init__.py 2>/dev/null | head -5; ls venv/lib/ 2>/dev/null
+> 🔧 **read_file** — .bobignore
 
 ### 🤖 Assistant
 
-> 🔧 called: list_files, list_files, list_files
+> 🔧 called: list_files, read_file
 
 
 
-> 🔧 **list_files** — bob_sessions
+> 🔧 **list_files** — samples/overprivileged_agent
 
-> 🔧 **list_files** — analyzer/migrations
-
-> 🔧 **list_files** — analyzer/templates
+> 🔧 **read_file** — analyzer/admin.py
 
 ### 🤖 Assistant
 
-> 🔧 called: list_files
+> 🔧 called: glob, read_file
 
 
 
-> 🔧 **list_files** — analyzer/templates/analyzer
+> 🔧 **glob** — analyzer/core/*.py
 
-### 🤖 Assistant
-
-> 🔧 called: read_file
-
-
-
-> 🔧 **read_file** — .gitignore
+> 🔧 **read_file** — samples/overprivileged_agent/agent.py
 
 ### 🤖 Assistant
 
 > 🔧 called: update_todo_list
 
-
+Now I have a thorough understanding of the codebase. Let me compile the AGENTS.md files.
 
 > 🔧 **update_todo_list** — 
-[x] Check for existing AGENTS.md files and other AI rules
+[x] Check for existing AGENTS.md files and other AI assistant rules
 [x] Identify stack, language, framework, build tools
 [x] Extract commands (build, test, lint, run)
-[x] Map core architecture and key entry points
+[x] Map core architecture and entry points
 [x] Document critical patterns and code style
-[-] Compile AGENTS.md files
+[-] Compile AGENTS.md and mode-specific files
 
 
 ### 🤖 Assistant
 
 > 🔧 called: write_file
 
-Now I have a clear picture of the project. Let me create the AGENTS.md files.
+
 
 > 🔧 **write_file** — AGENTS.md
 
@@ -460,7 +422,7 @@ Now I have a clear picture of the project. Let me create the AGENTS.md files.
 
 > 🔧 called: execute_command
 
-Now create the mode-specific files:
+
 
 > 🔧 **execute_command** — mkdir -p .bob/rules-agent .bob/rules-ask .bob/rules-plan
 
@@ -483,12 +445,12 @@ Now create the mode-specific files:
 
 
 > 🔧 **update_todo_list** — 
-[x] Check for existing AGENTS.md files and other AI rules
+[x] Check for existing AGENTS.md files and other AI assistant rules
 [x] Identify stack, language, framework, build tools
 [x] Extract commands (build, test, lint, run)
-[x] Map core architecture and key entry points
+[x] Map core architecture and entry points
 [x] Document critical patterns and code style
-[x] Compile AGENTS.md files
+[x] Compile AGENTS.md and mode-specific files
 
 
 ### 🤖 Assistant
@@ -496,13 +458,25 @@ Now create the mode-specific files:
 Four files created:
 
 **[`AGENTS.md`](AGENTS.md)** — General project guidance covering:
-- Stack: Django 6.1 + DRF, Python 3.14, venv-based deps
-- Commands: dev server, run all tests, run a single test (`python manage.py test analyzer.tests.Class.method`), migrations
-- Non-obvious: settings split, `Asia/Kathmandu` timezone, no `requirements.txt` (venv-only), `SPEC.md` as authoritative spec
-- Architecture: the four empty core modules and their intended pipeline roles
+- Stack (Django 6.1 + DRF, SQLite, split settings)
+- Dev commands including how to run a single test (`python manage.py test analyzer.tests.MyTest`)
+- The full analysis pipeline architecture
+- Key domain rules extracted from SPEC.md (operation priority, sensitivity values, score formula, score bands)
+- Code style notes
 
-**[`.bob/rules-agent/AGENTS.md`](.bob/rules-agent/AGENTS.md)** — Coding-specific gotchas: empty stub modules, where to add URLs, test file location, no requirements.txt trap
+**[`.bob/rules-agent/AGENTS.md`](.bob/rules-agent/AGENTS.md)** — Coding-specific gotchas:
+- `analyzer/core/` modules don't exist yet and are the primary implementation target
+- Exact import names views.py expects
+- `Report.attack_paths`/`mitigations` are `JSONField` — pass lists, not strings
 
-**[`.bob/rules-ask/AGENTS.md`](.bob/rules-ask/AGENTS.md)** — Documentation context: `SPEC.md` as canonical source, distinction between `analyzer` app and `redline_bob` project package, stubs vs implementation
+**[`.bob/rules-ask/AGENTS.md`](.bob/rules-ask/AGENTS.md)** — Documentation context:
+- `SPEC.md` is the canonical source of truth for all domain logic
+- `bob_sessions/` is an IDE artifact, not app code
+- `samples/` are analyzer inputs, not test fixtures
+- Timezone is Asia/Kathmandu, not UTC
 
-**[`.bob/rules-plan/AGENTS.md`](.bob/rules-plan/AGENTS.md)** — Architectural constraints: sequential pipeline must be preserved, ordinal severity scoring rule, empty templates directory, settings split convention, no test tooling beyond Django's runner
+**[`.bob/rules-plan/AGENTS.md`](.bob/rules-plan/AGENTS.md)** — Architectural constraints:
+- Pipeline is fully synchronous and request-scoped (no async/background tasks)
+- `max_depth` is intentionally excluded from the score formula
+- Mitigation candidates are advisory only — must never touch the source repo
+- Settings inheritance rules (base vs per-environment)

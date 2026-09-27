@@ -4,47 +4,61 @@ This file provides guidance to agents when working with code in this repository.
 
 ## Project
 
-Django 6.1 + Django REST Framework blast-radius analyzer for AI agent tool definitions. Python 3.14 venv at `venv/`.
+**Redline** — a Django web app that performs static blast-radius analysis on LangChain agent repositories. It takes a local filesystem path to a LangChain repo, scans `@tool`-decorated functions via AST, and produces a security report with a 0–100 blast-radius score.
+
+## Stack
+
+- Python + Django 6.1 + Django REST Framework
+- SQLite (dev), settings split: `redline_bob/settings/{base,development,production}.py`
+- No frontend build step — plain Django templates in `analyzer/templates/`
 
 ## Commands
 
 ```bash
-# Activate venv first (required)
-source venv/bin/activate
-
-# Run dev server
+# Run dev server (default settings module: redline_bob.settings.development)
 python manage.py runserver
 
-# Run all tests
-python manage.py test
+# Migrations
+python manage.py makemigrations && python manage.py migrate
 
-# Run a single test
-python manage.py test analyzer.tests.MyTestCase.test_method
-
-# Apply migrations
-python manage.py migrate
+# Tests
+python manage.py test                         # all tests
+python manage.py test analyzer.tests.MyTest   # single test
 ```
 
-## Settings
-
-- `manage.py` defaults to `redline_bob.settings.development` — no env var needed locally.
-- Dev settings load from `.env` (not committed). Requires `SECRET_KEY` at minimum.
-- Settings split: `redline_bob/settings/base.py` → `development.py` / `production.py`.
-- `TIME_ZONE` is `Asia/Kathmandu` (non-standard).
+- Requires a `.env` file with `SECRET_KEY` and optionally `DEBUG=True` (read via `python-dotenv` in dev settings)
+- `DJANGO_SETTINGS_MODULE` defaults to `redline_bob.settings.development` (set in `manage.py`)
 
 ## Architecture
 
-Core analysis pipeline lives in `analyzer/core/` with four stub modules (not yet implemented):
-- `parser.py` — parse incoming JSON agent config
-- `classifier.py` — classify tools by permission dimension (read/write/execute/network)
-- `paths.py` — detect attack chains and score against intended purpose
-- `report.py` — produce structured blast radius report
+```
+views.py (POST /analyze/)
+  → analyzer/core/parser.py      — parses the LangChain repo path input
+  → analyzer/core/classifier.py  — classifies tools (operation + resource type)
+  → analyzer/core/paths.py       — detects flagged impact paths via BFS
+  → analyzer/core/report.py      — generates the structured report dict + score
+  → Report model (DB)            — stores result; redirects to /report/<id>/
+```
 
-Detection rules and severity logic are defined in `SPEC.md` — treat it as the authoritative spec.
+The four core modules (`parser`, `classifier`, `paths`, `report`) are imported in `analyzer/views.py` — they live in `analyzer/core/` but **are not yet implemented** (the `__init__.py` is empty; they must be created).
 
-## Key Conventions
+## Key Domain Rules (from SPEC.md)
 
-- Templates follow Django app convention: `analyzer/templates/analyzer/<name>.html`
-- No `requirements.txt` — dependencies tracked only in `venv/`. If adding packages, document them here or add a requirements file.
-- Tests live in `analyzer/tests.py` (single file, not a `tests/` directory).
-- No linter or formatter config present yet; follow PEP 8.
+- **Operation priority** (highest wins): `admin > financial > execute > delete > write > send > read`
+- **Sensitivity**: `shell=5, credentials=5, cloud=5, database=4, external_api=3, email=3, filesystem=2`
+- **Blast radius score formula** (0–100):
+  `0.35·norm_sensitive + 0.25·norm_write_capable + 0.15·(1−approval_coverage) + 0.10·(1−recovery_coverage) + 0.15·norm_high_impact_tools`
+- Score bands: `0–25 LOW, 26–50 MEDIUM, 51–75 HIGH, 76–100 CRITICAL`
+- Findings generated only for `CRITICAL` and `HIGH` impact paths
+- Assets are global to the agent — same resource name across tools = one asset node
+
+## Samples
+
+Three synthetic LangChain repos in `samples/` (`overprivileged_agent`, `credential_agent`, `secure_agent`) — use these as test inputs; the `overprivileged_agent` has a worked example in SPEC.md.
+
+## Code Style
+
+- Imports: stdlib → third-party → local (relative `.` imports within `analyzer/`)
+- No linter config present; follow PEP 8
+- `analyzer/core/__init__.py` is empty — do not import module-level symbols there
+- Settings use `from .base import *` wildcard — keep per-environment overrides minimal
