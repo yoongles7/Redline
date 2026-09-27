@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Redline{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { font-family: 'JetBrains Mono', 'Courier New', monospace; }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col">
+
+  <nav class="border-b border-zinc-800 px-6 py-4">
+    <div class="max-w-4xl mx-auto">
+      <a href="/" class="text-orange-500 font-semibold tracking-tight hover:text-orange-400 transition-colors">
+        Redline
+      </a>
+    </div>
+  </nav>
+
+  <main class="flex-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="border-t border-zinc-800 px-6 py-4 mt-auto">
+    <div class="max-w-4xl mx-auto text-zinc-600 text-xs text-center">
+      Redline covers tool permission blast radius only — not runtime behaviour, memory poisoning, or multi-agent risks.
+    </div>
+  </footer>
+
+</body>
+</html>
